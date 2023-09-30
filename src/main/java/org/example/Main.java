@@ -91,6 +91,9 @@ public class Main {
                 System.out.println("Main:Error en "+smsg+ " persistiendo, error: "+e.getMessage());
             }
         }
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+        clearconsole();
     }
 
     private static void modificarTupla() {
@@ -173,6 +176,10 @@ public class Main {
                 System.out.println("Main:Error en "+smsg+ " persistiendo, error: "+e.getMessage());
             }
         }
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+        clearconsole();
+
     }
 
     private static void altaTupla() {
@@ -247,6 +254,16 @@ public class Main {
             } catch(Exception e) {
                 System.out.println("Main:Error en "+smsg+ " persistiendo, error: "+e.getMessage());
             }
+
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+        clearconsole();
+    }
+
+    public static void clearconsole(){
+        for (int i = 0; i < 30; i++) {
+            System.out.println("");
+        }
     }
 
     public static void main(String arg[]) {
