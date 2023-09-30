@@ -9,7 +9,7 @@
         <properties>
             <property name="eclipselink.logging.level" value="INFO"/>
             <property name="javax.persistence.jdbc.driver" value="org.firebirdsql.jdbc.FBDriver"/>
-            <property name="javax.persistence.jdbc.url" value="jdbc:firebirdsql:localhost/3050:C:\Users\casal\OneDrive\Documentos\Universidad\Sexto\Base de Datos 2\BDJPA\bdjpa.fdb?encoding=UTF8"/>
+            <property name="javax.persistence.jdbc.url" value="jdbc:firebirdsql:localhost/3050:data/bdjpa.fdb?encoding=UTF8"/>
             <property name="javax.persistence.jdbc.user" value="sysdba"/>
             <property name="javax.persistence.jdbc.password" value="masterkey"/>
         </properties>

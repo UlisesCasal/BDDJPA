@@ -8,20 +8,25 @@ import java.util.Scanner;
 public class Main {
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("BDJPA");
         private static EntityManager em = emf.createEntityManager();
-
         private static final EntityTransaction emt = em.getTransaction();
-
-
+        private static void clearConsola() {
+            for (int i = 0; i < 30; i++) {
+                System.out.println();
+            }
+        }
         public static void menu(){
             boolean salir = false;
             Scanner sc = new Scanner(System.in);
             while (!salir) {
                 System.out.println("""
+                        -----------[Menu Principal]--------------
+                        
                         Ingrese una opcion:
                         1- Alta de Tuplas.
                         2- Modificar Tuplas.
                         3- Deletear Tuplas.
                         Cualquier otra tecla para salir.
+                        
                         Ingrese una opcion: """);
                 String input = sc.nextLine().trim();
                 switch (input) {
@@ -32,18 +37,22 @@ public class Main {
                     case "3":
                         deleteTupla();
                     default:
+                        clearConsola();
+                        System.out.println("Nos vemos!");
                         salir = true;
                 }
             }
             sc.close();
         }
-
     private static void deleteTupla() {
         String smsg = "persist()";
         Scanner sc = new Scanner(System.in);
-        System.out.println("Por favor Ingrese la tabla a la cual quiere realizar un alta:" +
-                "1. Cliente." +
-                "2. Factura");
+        System.out.println("""
+                Por favor Ingrese la tabla a la cual quiere realizar un alta:
+                
+                1. Cliente
+                2. Factura
+                """);
         String inp = sc.nextLine().trim();
         switch (inp){
             case "1": {
