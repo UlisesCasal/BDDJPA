@@ -1,11 +1,7 @@
 package org.example;
-
-// Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
-// then press Enter. You can now see whitespace characters in your code.
 import javax.persistence.*;
 import java.util.List;
 import java.util.Scanner;
-
 public class Main {
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("BDJPA");
         private static EntityManager em = emf.createEntityManager();
@@ -34,248 +30,262 @@ public class Main {
                         Ingrese una opcion: """);
                 String input = sc.nextLine().trim();
                 switch (input) {
-                    case "1":
-                        altaTupla();
-                        break;
-                    case "2":
-                        modificarTupla();
-                        break;
-                    case "3":
-                        deleteTupla();
-                        break;
-                    case "4":
-                        mostrarTupla();
-                        break;
-                    default:
+                    case "1" -> altaTupla();
+                    case "2" -> modificarTupla();
+                    case "3" -> deleteTupla();
+                    case "4" -> mostrarTupla();
+                    default -> {
                         clearConsola();
                         System.out.println("Nos vemos!");
-                        salir = true;
+                        salir = true;}
                 }
             }
             sc.close();
         }
     private static void deleteTupla() {
+        clearconsole();
         String smsg = "persist()";
         System.out.println("""
                 Por favor Ingrese la tabla a la cual quiere realizar una baja:
-                
-                1. Cliente
-                2. Factura
+                1. Cliente.
+                2. Factura.
+                3. Volver.
                 """);
         String inp = sc.nextLine().trim();
-        switch (inp){
-            case "1": {
-                em.getTransaction().begin();
-                System.out.println("Ingrese el codigo: ");
-                inp = sc.nextLine().trim();
-                // Busca la entidad que deseas modificar
-                Cliente c = em.find(Cliente.class, Integer.parseInt(inp));
-
-                if (c == null) {
-                    System.out.println("No existe dicho cliente");
-                    break;
-                }
-                else em.remove(c);
-            }
-            case "2": {
-                em.getTransaction().begin();
-                System.out.println("Ingrese el numero: ");
-                inp = sc.nextLine().trim();
-                // Busca la entidad que deseas modificar
-                Factura f = em.find(Factura.class, Integer.parseInt(inp));
-
-                if (f == null) {
-                    System.out.println("No existe dicha factura");
-                    break;
-                }
-                else em.remove(f);
-            }
-
-            try {
-                //Cliente f = em.find(Cliente.class,456); // acceso por PK
-                //em.remove(f);
-                System.out.println("Main:em.persist(c) hecho");
-                smsg = "commit()";
-                em.getTransaction().commit();
-                //emt.commit();
-                System.out.println("Main:emt.commit() hecho");
-            } catch(IllegalArgumentException iae) {
-                System.out.println("Main:Error en "+smsg+ " persistiendo, posiblemente sea null");
-            } catch(EntityExistsException eee) {
-                System.out.println("Main:Error en "+smsg+" persistiendo, esta entidad ya existe");
-            } catch(TransactionRequiredException tre) {
-                System.out.println("Main:Error en "+smsg+" persistiendo, se requiere de una transaccion");
-            } catch(Exception e) {
-                System.out.println("Main:Error en "+smsg+ " persistiendo, error: "+e.getMessage());
-            }
+        switch (inp) {
+            case "1" -> deleteCliente();
+            case "2" -> deleteFactura();
+            case "3" -> {}
+            default -> deleteTupla();
         }
-        System.out.println("Presione ENTER para continuar...");
-        sc.nextLine();
-        clearconsole();
-    }
-
-    private static void modificarTupla() {
-        String smsg = "persist()";
-        System.out.println("Por favor Ingrese la tabla a la cual quiere realizar una modificacion:" +
-                "1. Cliente." +
-                "2. Factura");
-        String inp = sc.nextLine().trim();
-        switch (inp){
-            case "1": {
-                em.getTransaction().begin();
-                System.out.println("Ingrese el codigo: ");
-                inp = sc.nextLine().trim();
-                // Busca la entidad que deseas modificar
-                Cliente c = em.find(Cliente.class, Integer.parseInt(inp));
-
-                if (c == null) {
-                    System.out.println("No existe dicho cliente");
-                    break;
-                }
-
-                // Modifica los atributos de la entidad
-                System.out.println("Ingrese el nombre: ");
-                inp = sc.nextLine().trim();
-                c.setNombre(inp);
-
-                System.out.println("Ingrese la direccion: ");
-                inp = sc.nextLine().trim();
-                c.setDirec(inp);
-
-                System.out.println("Ingrese el codigo postal: ");
-                inp = sc.nextLine().trim();
-                c.setCodigo(Integer.parseInt(inp));
-
-                System.out.println("Ingrese el telefono: ");
-                inp = sc.nextLine().trim();
-                c.setTel(inp);
-
-                // Cierra el EntityManager
-            }
-            case "2": {
-                em.getTransaction().begin();
-                System.out.println("Ingrese el numero: ");
-                inp = sc.nextLine().trim();
-                // Busca la entidad que deseas modificar
-                Factura f = em.find(Factura.class, Integer.parseInt(inp));
-
-                if (f == null) {
-                    System.out.println("No existe dicha factura");
-                    break;
-                }
-
-                System.out.println("Ingrese el id: ");
-                inp = sc.nextLine().trim();
-                f.setCodigo(Integer.parseInt(inp));
-
-                System.out.println("Ingrese la importe: ");
-                inp = sc.nextLine().trim();
-                f.setImporte(Double.parseDouble(inp));
-
-                // Cierra el EntityManager
-            }
-
+        if (inp.equals("1") || (inp.equals("2"))) {
             try {
-                //Cliente f = em.find(Cliente.class,456); // acceso por PK
-                //em.remove(f);
-                System.out.println("Main:em.persist(c) hecho");
-                smsg = "commit()";
-                em.getTransaction().commit();
-                //emt.commit();
-                System.out.println("Main:emt.commit() hecho");
-            } catch(IllegalArgumentException iae) {
-                System.out.println("Main:Error en "+smsg+ " persistiendo, posiblemente sea null");
-            } catch(EntityExistsException eee) {
-                System.out.println("Main:Error en "+smsg+" persistiendo, esta entidad ya existe");
-            } catch(TransactionRequiredException tre) {
-                System.out.println("Main:Error en "+smsg+" persistiendo, se requiere de una transaccion");
-            } catch(Exception e) {
-                System.out.println("Main:Error en "+smsg+ " persistiendo, error: "+e.getMessage());
-            }
-        }
-        System.out.println("Presione ENTER para continuar...");
-        sc.nextLine();
-        clearconsole();
-
-    }
-
-    private static void altaTupla() {
-
-            String smsg = "persist()";
-            System.out.println("Por favor Ingrese la tabla a la cual quiere realizar un alta:" +
-                    "1. Cliente." +
-                    "2. Factura");
-            String inp = sc.nextLine().trim();
-            switch (inp){
-                case "1":{
-                    Cliente c = new Cliente();
-                    System.out.println("Ingrese el codigo: ");
-                    inp = sc.nextLine().trim();
-                    c.setCodigo(Integer.parseInt(inp));
-
-                    System.out.println("Ingrese el nombre: ");
-                    inp = sc.nextLine().trim();
-                    c.setNombre(inp);
-
-                    System.out.println("Ingrese la direccion: ");
-                    inp = sc.nextLine().trim();
-                    c.setDirec(inp);
-
-                    System.out.println("Ingrese el codigo postal: ");
-                    inp = sc.nextLine().trim();
-                    c.setCodigo(Integer.parseInt(inp));
-
-                    System.out.println("Ingrese el telefono: ");
-                    inp = sc.nextLine().trim();
-                    c.setTel(inp);
-                    emt.begin();
-                    em.persist(c);
-                    break;
-
-                }
-                case "2":{
-
-                    Factura f = new Factura();
-                    System.out.println("Ingrese el numero: ");
-                    inp = sc.nextLine().trim();
-                    f.setNumero(Integer.parseInt(inp));
-
-                    System.out.println("Ingrese el id: ");
-                    inp = sc.nextLine().trim();
-                    f.setCodigo(Integer.parseInt(inp));
-
-                    System.out.println("Ingrese la importe: ");
-                    inp = sc.nextLine().trim();
-                    f.setImporte(Double.parseDouble(inp));
-
-                    emt.begin();
-                    em.persist(f);
-                    break;
-                }
-            }
-
-            try {
-                //Cliente f = em.find(Cliente.class,456); // acceso por PK
-                //em.remove(f);
                 System.out.println("Main:em.persist(c) hecho");
                 smsg = "commit()";
                 emt.commit();
                 System.out.println("Main:emt.commit() hecho");
-            } catch(IllegalArgumentException iae) {
-                System.out.println("Main:Error en "+smsg+ " persistiendo, posiblemente sea null");
-            } catch(EntityExistsException eee) {
-                System.out.println("Main:Error en "+smsg+" persistiendo, esta entidad ya existe");
-            } catch(TransactionRequiredException tre) {
-                System.out.println("Main:Error en "+smsg+" persistiendo, se requiere de una transaccion");
-            } catch(Exception e) {
-                System.out.println("Main:Error en "+smsg+ " persistiendo, error: "+e.getMessage());
+            } catch (IllegalArgumentException iae) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, posiblemente sea null");
+            } catch (EntityExistsException eee) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, esta entidad ya existe");
+            } catch (TransactionRequiredException tre) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, se requiere de una transaccion");
+            } catch (Exception e) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, error: " + e.getMessage());
             }
-
+        }
         System.out.println("Presione ENTER para continuar...");
         sc.nextLine();
+        }
+    private static void deleteCliente() {
         clearconsole();
+        em.getTransaction().begin();
+        System.out.println("Ingrese el codigo: ");
+        String inp = sc.nextLine().trim();
+        // Busca la entidad que deseas modificar
+        Cliente c = em.find(Cliente.class, Integer.parseInt(inp));
+        if (c == null) {
+            System.out.println("No existe dicho cliente");
+        }
+        else {
+            em.remove(c);
+            System.out.println("Cliente borrado");
+        }
     }
+    private static void deleteFactura() {
+        clearconsole();
+        em.getTransaction().begin();
+        System.out.println("Ingrese el numero: ");
+        String inp = sc.nextLine().trim();
+        // Busca la entidad que deseas modificar
+        Factura f = em.find(Factura.class, Integer.parseInt(inp));
+        if (f == null) {
+            System.out.println("No existe dicha factura");
+        }
+        else {
+            em.remove(f);
+            System.out.println("Factura borrada");
+        }
+    }
+    private static void modificarTupla() {
+        clearconsole();
+        String smsg = "persist()";
+        System.out.println("""
+                Por favor Ingrese la tabla a la cual quiere realizar una modificacion:
+                1. Cliente.
+                2. Factura.
+                3. Volver.
+                Ingrese su opcion:""");
+        String inp = sc.nextLine().trim();
+        switch (inp) {
+            case "1" -> modificarCliente();
+            case "2" -> modificarFactura();
+            case "3" -> {}
+            default -> modificarFactura();}
+        if (inp.equals("1") || (inp.equals("2"))) {
+            try {
+                System.out.println("Main:em.persist(c) hecho");
+                smsg = "commit()";
+                emt.commit();
+                System.out.println("Main:emt.commit() hecho");
+            } catch (IllegalArgumentException iae) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, posiblemente sea null");
+            } catch (EntityExistsException eee) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, esta entidad ya existe");
+            } catch (TransactionRequiredException tre) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, se requiere de una transaccion");
+            } catch (Exception e) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, error: " + e.getMessage());
+            }
+        }
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+    }
+    private static void modificarCliente() {
+        clearconsole();
+        em.getTransaction().begin();
+        System.out.println("Ingrese el codigo: ");
+        String inp = sc.nextLine().trim();
+        // Busca el cliente que se desea modificar
+        Cliente c = em.find(Cliente.class, Integer.parseInt(inp));
+        if (c == null) {
+            System.out.println("No existe dicho cliente");
+            return;
+        }
+        // Modifica los atributos del cliente
+        System.out.println("Ingrese el nombre (o deje en blanco para no cambiarlo): ");
+        inp = sc.nextLine().trim();
+        if (!inp.equals("")) c.setNombre(inp);
+        System.out.println("Ingrese la direccion (o deje en blanco para no cambiarlo): ");
+        inp = sc.nextLine().trim();
+        if (!inp.equals("")) c.setDirec(inp);
+        System.out.println("Ingrese el codigo postal (o deje en blanco para no cambiarlo): ");
+        inp = sc.nextLine().trim();
+        if (!inp.equals("")) c.setCodigo(Integer.parseInt(inp));
+        System.out.println("Ingrese el telefono (o deje en blanco para no cambiarlo): ");
+        inp = sc.nextLine().trim();
+        if (!inp.equals("")) c.setTel(inp);
 
+        Cliente c1 = em.find(Cliente.class, c.getCodigo());
+        clearconsole();
+        if (c1 == null) {
+            System.out.println("Ha habido un error con el cliente :(");}
+        else {
+            System.out.println("Modificacion exitosa!");
+            printCliente(c1);
+        }
+    }
+    private static void modificarFactura() {
+        clearconsole();
+        em.getTransaction().begin();
+        System.out.println("Ingrese el numero: ");
+        String inp = sc.nextLine().trim();
+        // Busca la entidad que deseas modificar
+        Factura f = em.find(Factura.class, Integer.parseInt(inp));
+        if (f == null) {
+            System.out.println("No existe dicha factura");
+            return;
+        }
+        System.out.println("Ingrese el id (o deje en blanco para no cambiarlo): ");
+        if (!inp.equals("")) inp = sc.nextLine().trim();
+        f.setCodigo(Integer.parseInt(inp));
+        System.out.println("Ingrese la importe (o deje en blanco para no cambiarlo): ");
+        if (!inp.equals("")) inp = sc.nextLine().trim();
+        f.setImporte(Double.parseDouble(inp));
+
+        Factura f1 = em.find(Factura.class, f.getNumero());
+        if (f1 == null) {
+            System.out.println("No se a podido dar de alta la factura :(");}
+        else {
+            System.out.println("Alta exitosa!");
+            printFactura(f1);
+        }
+    }
+    private static void altaTupla() {
+        clearconsole();
+        String smsg = "persist()";
+        System.out.println("""
+             Por favor Ingrese la tabla a la cual quiere realizar un alta:
+             1. Cliente.
+             2. Factura.
+             3. Volver.
+             Ingrese su opcion:""");
+        String inp = sc.nextLine().trim();
+        switch (inp) {
+            case "1" -> altaCliente();
+            case "2" -> altaFactura();
+            case "3" -> {}
+            default -> altaTupla();}
+        if (inp.equals("1") || (inp.equals("2"))) {
+            try {
+                System.out.println("Main:em.persist(c) hecho");
+                smsg = "commit()";
+                emt.commit();
+                System.out.println("Main:emt.commit() hecho");
+            } catch (IllegalArgumentException iae) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, posiblemente sea null");
+            } catch (EntityExistsException eee) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, esta entidad ya existe");
+            } catch (TransactionRequiredException tre) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, se requiere de una transaccion");
+            } catch (Exception e) {
+                System.out.println("Main:Error en " + smsg + " persistiendo, error: " + e.getMessage());
+            }
+        }
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+    }
+    private static void altaCliente() {
+        clearconsole();
+        Cliente c = new Cliente();
+        System.out.println("Ingrese el codigo: ");
+        String inp = sc.nextLine().trim();
+        c.setCodigo(Integer.parseInt(inp));
+        System.out.println("Ingrese el nombre: ");
+        inp = sc.nextLine().trim();
+        c.setNombre(inp);
+        System.out.println("Ingrese la direccion: ");
+        inp = sc.nextLine().trim();
+        c.setDirec(inp);
+        System.out.println("Ingrese el codigo postal: ");
+        inp = sc.nextLine().trim();
+        c.setPostal(Integer.parseInt(inp));
+        System.out.println("Ingrese el telefono: ");
+        inp = sc.nextLine().trim();
+        c.setTel(inp);
+        emt.begin();
+        em.persist(c);
+
+        Cliente c1 = em.find(Cliente.class, c.getCodigo());
+        clearconsole();
+        if (c1 == null) {
+            System.out.println("No se a podido dar de alta al cliente :(");}
+        else {
+            System.out.println("Alta exitosa!");
+            printCliente(c1);}
+    }
+    private static void altaFactura() {
+        clearconsole();
+        Factura f = new Factura();
+        System.out.println("Ingrese el numero: ");
+        String inp = sc.nextLine().trim();
+        f.setNumero(Integer.parseInt(inp));
+        System.out.println("Ingrese el id: ");
+        inp = sc.nextLine().trim();
+        f.setCodigo(Integer.parseInt(inp));
+        System.out.println("Ingrese la importe: ");
+        inp = sc.nextLine().trim();
+        f.setImporte(Double.parseDouble(inp));
+        emt.begin();
+        em.persist(f);
+
+        Factura f1 = em.find(Factura.class, f.getNumero());
+        if (f1 == null) {
+            System.out.println("No se a podido dar de alta la factura :(");}
+        else {
+            System.out.println("Alta exitosa!");
+            printFactura(f1);}
+    }
     private static void printCliente(Cliente cliente) {
         System.out.println(
                 "Codigo: " + cliente.getCodigo() + "\r\n" +
@@ -294,12 +304,12 @@ public class Main {
     }
     public static void mostrarTupla() {
         clearconsole();
-        System.out.println("Por favor Ingrese la tabla a la cual quiere listar:" + "\r\n" +
-                "1. Cliente." + "\r\n" +
-                "2. Factura" + "\r\n" +
-                "3. Volver" + "\r\n" +
-                "\r\n" +
-                "Ingrese su opcion: ");
+        System.out.println("""
+                Por favor Ingrese la tabla a la cual quiere listar:
+                1. Cliente.
+                2. Factura
+                3. Volver
+                Ingrese su opcion: """);
         String opcion = sc.nextLine();
         switch (opcion){
             case "1":
@@ -313,7 +323,6 @@ public class Main {
             default:
                 mostrarTupla();
         }
-
     }
     public static void mostrarClientes() {
         clearconsole();
@@ -331,7 +340,6 @@ public class Main {
         System.out.println("Presione ENTER para continuar...");
         sc.nextLine();
     }
-
     public static void mostrarFacturas() {
         clearconsole();
         Query query = em.createQuery("SELECT f FROM Factura f");
@@ -348,20 +356,16 @@ public class Main {
         System.out.println("Presione ENTER para continuar...");
         sc.nextLine();
     }
-
     public static void clearconsole(){
         for (int i = 0; i < 30; i++) {
             System.out.println("");
         }
     }
-
     public static void main(String arg[]) {
             System.out.println("Main:inicio");
             menu();
             salir();
         }
-        public static EntityManagerFactory getEntityManagerFactory() { return emf; }
-        public static EntityManager getEntityManager() { return em; }
         public static void salir() {
             if ( em != null )
                 if (em.isOpen()) em.close();
@@ -369,4 +373,3 @@ public class Main {
                 if (emf.isOpen()) emf.close();
         }
     }
-
