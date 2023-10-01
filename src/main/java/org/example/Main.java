@@ -3,12 +3,14 @@ package org.example;
 // Press Shift twice to open the Search Everywhere dialog and type `show whitespaces`,
 // then press Enter. You can now see whitespace characters in your code.
 import javax.persistence.*;
+import java.util.List;
 import java.util.Scanner;
 
 public class Main {
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("BDJPA");
         private static EntityManager em = emf.createEntityManager();
         private static final EntityTransaction emt = em.getTransaction();
+        private static Scanner sc = new Scanner(System.in);
         private static void clearConsola() {
             for (int i = 0; i < 30; i++) {
                 System.out.println();
@@ -16,8 +18,8 @@ public class Main {
         }
         public static void menu(){
             boolean salir = false;
-            Scanner sc = new Scanner(System.in);
             while (!salir) {
+                clearconsole();
                 System.out.println("""
                         -----------[Menu Principal]--------------
                         
@@ -25,6 +27,8 @@ public class Main {
                         1- Alta de Tuplas.
                         2- Modificar Tuplas.
                         3- Deletear Tuplas.
+                        4- Listar Tuplas.
+                        
                         Cualquier otra tecla para salir.
                         
                         Ingrese una opcion: """);
@@ -32,10 +36,16 @@ public class Main {
                 switch (input) {
                     case "1":
                         altaTupla();
+                        break;
                     case "2":
                         modificarTupla();
+                        break;
                     case "3":
                         deleteTupla();
+                        break;
+                    case "4":
+                        mostrarTupla();
+                        break;
                     default:
                         clearConsola();
                         System.out.println("Nos vemos!");
@@ -46,9 +56,8 @@ public class Main {
         }
     private static void deleteTupla() {
         String smsg = "persist()";
-        Scanner sc = new Scanner(System.in);
         System.out.println("""
-                Por favor Ingrese la tabla a la cual quiere realizar un alta:
+                Por favor Ingrese la tabla a la cual quiere realizar una baja:
                 
                 1. Cliente
                 2. Factura
@@ -107,8 +116,7 @@ public class Main {
 
     private static void modificarTupla() {
         String smsg = "persist()";
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Por favor Ingrese la tabla a la cual quiere realizar un alta:" +
+        System.out.println("Por favor Ingrese la tabla a la cual quiere realizar una modificacion:" +
                 "1. Cliente." +
                 "2. Factura");
         String inp = sc.nextLine().trim();
@@ -194,7 +202,6 @@ public class Main {
     private static void altaTupla() {
 
             String smsg = "persist()";
-            Scanner sc = new Scanner(System.in);
             System.out.println("Por favor Ingrese la tabla a la cual quiere realizar un alta:" +
                     "1. Cliente." +
                     "2. Factura");
@@ -269,6 +276,79 @@ public class Main {
         clearconsole();
     }
 
+    private static void printCliente(Cliente cliente) {
+        System.out.println(
+                "Codigo: " + cliente.getCodigo() + "\r\n" +
+                "Nombre: " + cliente.getNombre() + "\r\n" +
+                "Direccion: " + cliente.getDirec() + "\r\n" +
+                "Cod. postal: " + cliente.getPostal() + "\r\n" +
+                "Telefono: " + cliente.getTel());
+        System.out.println("-------------------------------------------------------");
+    }
+    private static void printFactura(Factura factura) {
+        System.out.println(
+                "Numero: " + factura.getNumero() + "\r\n" +
+                "Cod. cliente: " + factura.getCodigo() + "\r\n" +
+                "Importe: " + factura.getImporte());
+        System.out.println("-------------------------------------------------------");
+    }
+    public static void mostrarTupla() {
+        clearconsole();
+        System.out.println("Por favor Ingrese la tabla a la cual quiere listar:" + "\r\n" +
+                "1. Cliente." + "\r\n" +
+                "2. Factura" + "\r\n" +
+                "3. Volver" + "\r\n" +
+                "\r\n" +
+                "Ingrese su opcion: ");
+        String opcion = sc.nextLine();
+        switch (opcion){
+            case "1":
+                mostrarClientes();
+                break;
+            case "2":
+                mostrarFacturas();
+                break;
+            case "3":
+                break;
+            default:
+                mostrarTupla();
+        }
+
+    }
+    public static void mostrarClientes() {
+        clearconsole();
+        Query query = em.createQuery("SELECT c FROM Cliente c");
+        List<Cliente> Clientes = query.getResultList();
+        if (Clientes.size() == 0) {
+            System.out.println("No existen clientes :(");
+        }
+        else {
+            System.out.println("-------------------[Clientes]---------------------------");
+            for (Cliente cliente : Clientes) {
+                printCliente(cliente);
+            }
+        }
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+    }
+
+    public static void mostrarFacturas() {
+        clearconsole();
+        Query query = em.createQuery("SELECT f FROM Factura f");
+        List<Factura> Facturas = query.getResultList();
+        if (Facturas.size() == 0) {
+            System.out.println("No existen facturas :(");
+        }
+        else {
+            System.out.println("-------------------[Facturas]---------------------------");
+            for (Factura factura : Facturas) {
+                printFactura(factura);
+            }
+        }
+        System.out.println("Presione ENTER para continuar...");
+        sc.nextLine();
+    }
+
     public static void clearconsole(){
         for (int i = 0; i < 30; i++) {
             System.out.println("");
@@ -283,8 +363,10 @@ public class Main {
         public static EntityManagerFactory getEntityManagerFactory() { return emf; }
         public static EntityManager getEntityManager() { return em; }
         public static void salir() {
-            if ( em != null ) em.close();
-            if ( emf != null ) emf.close();
+            if ( em != null )
+                if (em.isOpen()) em.close();
+            if ( emf != null )
+                if (emf.isOpen()) emf.close();
         }
     }
 

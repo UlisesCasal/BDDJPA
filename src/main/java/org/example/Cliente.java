@@ -20,9 +20,7 @@ public class Cliente
     /**
      * Constructor for objects of class Cliente
      */
-    public Cliente()
-    {
-        // initialise instance variables
+    public Cliente() {
     }
 
     //  SETTERS
@@ -37,5 +35,6 @@ public class Cliente
     public String getDirec() { return direc; }
     public int getPostal() { return postal; }
     public String getTel() { return tel; }
+
 }
 
