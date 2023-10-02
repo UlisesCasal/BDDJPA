@@ -2,6 +2,7 @@ package org.example;
 import javax.persistence.*;
 import java.util.List;
 import java.util.Scanner;
+
 public class Main {
         private static EntityManagerFactory emf = Persistence.createEntityManagerFactory("BDJPA");
         private static EntityManager em = emf.createEntityManager();
