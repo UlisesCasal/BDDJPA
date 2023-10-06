@@ -122,7 +122,7 @@ public class Main {
             case "1" -> modificarCliente();
             case "2" -> modificarFactura();
             case "3" -> {}
-            default -> modificarFactura();}
+            default -> modificarTupla();}
         if (inp.equals("1") || (inp.equals("2"))) {
             try {
                 System.out.println("Main:em.persist(c) hecho");
